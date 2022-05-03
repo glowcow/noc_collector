@@ -1,0 +1,92 @@
+stages:
+  - Build
+  - Push
+  - Deploy
+  - Rollback
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+
+Build image with Docker:
+  stage: Build
+  tags:
+    - noc_msk
+    - docker
+  script:
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG.$CI_PIPELINE_ID .
+
+Push image to registry:
+  stage: Push
+  tags:
+    - noc_msk
+    - docker
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+  script:
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG.$CI_PIPELINE_ID
+  only:
+    - master
+
+Deploy image to Docker:
+  stage: Deploy
+  tags:
+    - noc_msk
+    - docker
+  script:
+    - echo CI_LATEST_TAG=$(docker inspect --format '{{ index .Config.Image}}' $CI_PROJECT_NAME | cut -d':' -f2) >> deploy.env
+    - docker rm -f $CI_PROJECT_NAME
+    - docker create -t
+      -e SNMP_COMM1=$CI_SNMP_COMM1
+      -e SNMP_COMM2=$CI_SNMP_COMM2
+      -e PG_DB=$CI_PG_DB
+      -e PG_USR=$CI_PG_USR
+      -e PG_PASS=$CI_PG_PASS
+      -e PG_HOST=$CI_PG_HOST
+      -e TG_BOT=$CI_TG_BOT
+      -e TG_CHAT=$CI_TG_CHAT
+      -e R_USR=$CI_R_USR
+      -e R_PASS=$CI_R_PASS
+      -e MT_USER=$CI_MT_USER
+      -e MT_PASS=$CI_MT_PASS
+      -e MT_PASS2=$CI_MT_PASS2
+      --name $CI_PROJECT_NAME --restart unless-stopped
+      -m 512m --memory-reservation=256m --cpus=2
+      $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG.$CI_PIPELINE_ID
+    - docker start $CI_PROJECT_NAME
+  artifacts:
+    reports:
+      dotenv: deploy.env
+  only:
+    - master
+
+Rollback to previous image:
+  stage: Rollback
+  tags:
+    - noc_msk
+    - docker
+  script:
+    - docker rm -f $CI_PROJECT_NAME
+    - docker create -t
+      -e SNMP_COMM1=$CI_SNMP_COMM1
+      -e SNMP_COMM2=$CI_SNMP_COMM2
+      -e PG_DB=$CI_PG_DB
+      -e PG_USR=$CI_PG_USR
+      -e PG_PASS=$CI_PG_PASS
+      -e PG_HOST=$CI_PG_HOST
+      -e TG_BOT=$CI_TG_BOT
+      -e TG_CHAT=$CI_TG_CHAT
+      -e R_USR=$CI_R_USR
+      -e R_PASS=$CI_R_PASS
+      -e MT_USER=$CI_MT_USER
+      -e MT_PASS=$CI_MT_PASS
+      -e MT_PASS2=$CI_MT_PASS2
+      --name $CI_PROJECT_NAME --restart unless-stopped
+      -m 512m --memory-reservation=256m --cpus=2
+      $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_LATEST_TAG
+    - docker start $CI_PROJECT_NAME
+  needs:
+    - job: Deploy image to Docker
+      artifacts: true
+  only:
+    - master
+  when: manual

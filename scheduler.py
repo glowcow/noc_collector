@@ -20,9 +20,8 @@ class safe_scheduler(Scheduler):
 
 def main():
     scheduler = safe_scheduler()
-    #scheduler.every(10).minutes.do(poller.main) #express poller
-    scheduler.every(3).minutes.do(cfg_backup.main) #express poller
-    #scheduler.every(3).day.at("5:30").do(cfg_backup.main) #configuration files backup from network devices
+    scheduler.every(10).minutes.do(poller.main) #express poller
+    scheduler.every().day.at("5:30").do(cfg_backup.main) #configuration files backup from network devices
     while True:
         scheduler.run_pending()
         time.sleep(1)

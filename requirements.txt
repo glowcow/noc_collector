@@ -1,0 +1,6 @@
+multiprocess==0.70.12.2
+paramiko==2.10.3
+psycopg2==2.9.1
+pyTelegramBotAPI==4.4.0
+python3_netsnmp==1.1a1
+schedule==1.1.0

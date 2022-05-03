@@ -9,12 +9,12 @@ class ssh:
         session = paramiko.SSHClient()
         session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         try:
-            session.connect(hostname=host, username=base64.b64decode(username).decode("ascii"), password=base64.b64decode(password).decode("ascii"), timeout=ssh.timeout, banner_timeout=ssh.timeout, auth_timeout=ssh.timeout)
+            session.connect(hostname=host, username=base64.b64decode(username).decode("ascii"), password=base64.b64decode(password).decode("ascii"), look_for_keys=False, timeout=ssh.timeout, banner_timeout=ssh.timeout, auth_timeout=ssh.timeout)
         except socket.timeout:
             print(f'{bc.RED}[!]{bc.ENDC} Host: {host} is unreachable, timed out')
             return False
         except paramiko.AuthenticationException:
-            print(f'{bc.RED}[!]{bc.ENDC} Invalid credentials for {username} | {password}')
+            print(f'{bc.RED}[!]{bc.ENDC} Invalid credentials for {username} | {password} on {host}')
             return False
         except paramiko.ssh_exception.NoValidConnectionsError:
             print(f'{bc.RED}[!]{bc.ENDC} Connection refused by {host}')

@@ -5,7 +5,7 @@
 * [Setup](#setup)
 
 ## General info
-This tool collect config files and various metrics from network devices via SNMP and/or SSH.
+This tool collect config files and various metrics from network devices via SNMP and SSH.
 * ```express_poller.py``` - Running via scheduler, polls MPLS routers (aggregators of multi-campus network) via SNMP for detect various troubles and notifies thru Telegram.
 * ```nd_backup.py``` - Running via scheduler, collects current MPLS routers configuration every 24 hours.
 

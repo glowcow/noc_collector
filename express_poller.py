@@ -62,7 +62,7 @@ class poller:
                 return (f'{host}|{bsa_role}|MKU-{bsa_name}🔻')
     
     def main():
-        mp = Pool(64)
+        mp = Pool(32)
         bsa_list = pgsql.read(f'SELECT ip_vprn140 FROM bsa')
         err_poller = list(filter(bool,(mp.map(poller.bsa_poller_2, bsa_list))))
         bsa_cnt = int((list(pgsql.read(f'SELECT COUNT(*) FROM bsa')))[0])

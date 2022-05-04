@@ -58,7 +58,7 @@ class cfg_backup:
     
     def main():
         bsa_list = pgsql.read(f'SELECT ip_vprn140 FROM bsa')
-        pool = Pool(64)
+        pool = Pool(32)
         err_list_bsa = pool.map(cfg_backup.bsa_backup, bsa_list)
         err_list = list(filter(bool,(err_list_bsa)))
         if len(err_list) != 0:

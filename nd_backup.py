@@ -58,9 +58,10 @@ class cfg_backup:
     
     def main():
         bsa_list = pgsql.read(f'SELECT ip_vprn140 FROM bsa')
-        pool = Pool(32)
-        err_list_bsa = pool.map(cfg_backup.bsa_backup, bsa_list)
-        err_list = list(filter(bool,(err_list_bsa)))
+        mp = Pool(processes=32)
+        e = mp.map(cfg_backup.bsa_backup, bsa_list)
+        mp.terminate()
+        err_list = list(filter(bool,(e)))
         if len(err_list) != 0:
             msg = "\n".join(err_list)
             tg_msg.send('====== #backup_script_2 💾======', f'<code>{msg}</code>')

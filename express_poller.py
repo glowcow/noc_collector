@@ -65,8 +65,8 @@ class poller:
         mp = Pool(processes=32)
         bsa_list = pgsql.read(f'SELECT ip_vprn140 FROM bsa')
         e = mp.map(poller.bsa_poller_2, bsa_list)
-        mp.close()
-        err_poller = list(filter(bool,(e))))
+        mp.terminate()
+        err_poller = list(filter(bool,(e)))
         bsa_cnt = int((list(pgsql.read(f'SELECT COUNT(*) FROM bsa')))[0])
         err_bsa = []
         err_vsi = []

@@ -5,7 +5,7 @@ from main.sql import pgsql
 from main.tg_api import tg_msg
 from main.snmp import snmp
 from multiprocessing import Pool
-import re
+import re, sys
 
 class poller:
     def bsa_poller_2(host):
@@ -91,3 +91,4 @@ class poller:
             tg_msg.send('====== #express_poller_2 🚀======', msg)
             print(msg)
         pgsql.write(f"DELETE FROM bsa_poller_stat WHERE date < NOW() - INTERVAL '30 days'")
+        sys.exit(0)

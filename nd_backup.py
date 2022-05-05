@@ -65,3 +65,5 @@ class cfg_backup:
         if len(err_list) != 0:
             msg = "\n".join(err_list)
             tg_msg.send('====== #backup_script_2 💾======', f'<code>{msg}</code>')
+        timestamp = time.strftime('%d-%b-%Y %H:%M:%S')
+        print(f'{bc.CYAN}{"="*10} nd backup job are ran at {timestamp} {"="*10}{bc.ENDC}')

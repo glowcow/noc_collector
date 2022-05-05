@@ -5,7 +5,7 @@ from main.sql import pgsql
 from main.tg_api import tg_msg
 from main.snmp import snmp
 from multiprocessing import Pool
-import re
+import re, time
 
 class poller:
     def bsa_poller_2(host):

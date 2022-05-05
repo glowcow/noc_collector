@@ -91,3 +91,5 @@ class poller:
             tg_msg.send('====== #express_poller_2 🚀======', msg)
             print(msg)
         pgsql.write(f"DELETE FROM bsa_poller_stat WHERE date < NOW() - INTERVAL '30 days'")
+        timestamp = time.strftime('%d-%b-%Y %H:%M:%S')
+        print(f'{bc.CYAN}{"="*10} poller job are ran at {timestamp} {"="*10}{bc.ENDC}')

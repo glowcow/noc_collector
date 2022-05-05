@@ -7,7 +7,7 @@ from main.tg_api import tg_msg
 from main.snmp import snmp
 from main.config import radctl, mik_acc, bc
 from multiprocessing import Pool
-import time, re, sys
+import time, re
 
 class cfg_backup:
     def bsa_backup(host):
@@ -65,4 +65,3 @@ class cfg_backup:
         if len(err_list) != 0:
             msg = "\n".join(err_list)
             tg_msg.send('====== #backup_script_2 💾======', f'<code>{msg}</code>')
-        sys.exit(0)

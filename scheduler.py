@@ -24,6 +24,8 @@ def main():
     scheduler.every().day.at("02:30").do(cfg_backup.main) #configuration files backup from network devices
     while True:
         scheduler.run_pending()
+        timestamp = time.strftime('%d-%b-%Y %H:%M:%S')
+        print(f'{'='*10} all pending jobs are ran at {timestamp} {'='*10}')
         time.sleep(1)
 
 if __name__ == "__main__":

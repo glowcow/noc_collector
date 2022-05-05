@@ -25,7 +25,7 @@ def main():
     while True:
         scheduler.run_pending()
         timestamp = time.strftime('%d-%b-%Y %H:%M:%S')
-        print(f'{'='*10} all pending jobs are ran at {timestamp} {'='*10}')
+        print(f'{"="*10} all pending jobs are ran at {timestamp} {"="*10}')
         time.sleep(1)
 
 if __name__ == "__main__":
